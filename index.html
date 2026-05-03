@@ -1,1 +1,172 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prank Foto Teman</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            overflow: hidden;
+            background: #000;
+            cursor: none;
+            font-family: Arial, sans-serif;
+        }
+        
+        .container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+        }
+        
+        .prank-btn {
+            padding: 15px 30px;
+            font-size: 20px;
+            background: #ff4444;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(255,68,68,0.4);
+            transition: all 0.3s;
+        }
+        
+        .prank-btn:hover {
+            background: #ff6666;
+            transform: scale(1.05);
+        }
+        
+        .fullscreen-img {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover;
+            z-index: 9999;
+            display: none;
+            cursor: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDJDNi40OCAyIDIgNi40OCAyIDEyUzYuNDggMjIgMTIgMjJzMTAgLTkuNTIgMTAtMTBTMTcuNTIgMiAxMiAyWk0xMiAyMEgxMVYxMUgxMFYxMEgxMVY1SDEyVjEwSDE3VjExSDEyVjIwWiIgZmlsbD0id2hpdGUiLz4KPC9zdmc+'), auto;
+        }
+        
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0,0,0,0.8);
+            z-index: 9998;
+            display: none;
+        }
+        
+        .exit-hint {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255,255,255,0.9);
+            color: #333;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            z-index: 10000;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>BERITA INDO KAMBO NEW</h1>
+        <p>Klik tombol di bawah untuk lihat video nya</p>
+        <button class="prank-btn" onclick="startPrank()">
+            👉 KLIK SINI 👈
+        </button>
+        <p style="margin-top: 30px; font-size: 14px;">(join telegram untuk info lainnya)</p>
+    </div>
 
+    <!-- GANTI URL FOTO TEMAN KAMU DI SINI -->
+    <img id="prankImage" class="fullscreen-img" src="https://i.postimg.cc/X7V8v1vL/image.png" alt="Prank Image">
+    <div class="overlay" id="overlay"></div>
+    <div class="exit-hint" id="exitHint">
+        Tekan <strong>ESC</strong> atau klik kanan 3x untuk keluar 😜
+    </div>
+
+    <script>
+        let clickCount = 0;
+        let isPrankActive = false;
+
+        function startPrank() {
+            document.getElementById('prankImage').style.display = 'block';
+            document.getElementById('overlay').style.display = 'block';
+            document.getElementById('exitHint').style.display = 'block';
+            document.body.style.cursor = 'none';
+            isPrankActive = true;
+            
+            // Tambah efek shake
+            shakeScreen();
+        }
+
+        function shakeScreen() {
+            let totalShakes = 0;
+            const shakeInterval = setInterval(() => {
+                const img = document.getElementById('prankImage');
+                const randomX = (Math.random() - 0.5) * 20;
+                const randomY = (Math.random() - 0.5) * 20;
+                img.style.transform = `translate(${randomX}px, ${randomY}px)`;
+                
+                totalShakes++;
+                if (totalShakes > 50) {
+                    clearInterval(shakeInterval);
+                    document.getElementById('prankImage').style.transform = 'translate(0,0)';
+                }
+            }, 50);
+        }
+
+        // Event listeners untuk keluar
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && isPrankActive) {
+                endPrank();
+            }
+        });
+
+        document.getElementById('prankImage').addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            clickCount++;
+            if (clickCount >= 3) {
+                endPrank();
+            }
+        });
+
+        document.getElementById('overlay').addEventListener('click', function() {
+            clickCount++;
+            if (clickCount >= 3) {
+                endPrank();
+            }
+        });
+
+        function endPrank() {
+            document.getElementById('prankImage').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('exitHint').style.display = 'none';
+            document.body.style.cursor = 'default';
+            isPrankActive = false;
+            clickCount = 0;
+        }
+
+        // Prevent F11 fullscreen
+        document.addEventListener('keydown', function(e) {
+            if (e.keyCode == 122 || (e.ctrlKey && e.shiftKey && e.keyCode == 73) || (e.ctrlKey && e.keyCode == 85)) {
+                e.preventDefault();
+            }
+        });
+    </script>
+</body>
+</html>
